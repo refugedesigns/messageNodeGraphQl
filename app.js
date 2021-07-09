@@ -4,9 +4,6 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const uniqid = require("uniqid");
 
-const feedRoutes = require("../messageNodeAPI/routes/feed");
-const authRoutes = require("./routes/auth")
-
 const app = express();
 
 const fileStorage = multer.diskStorage({
@@ -42,8 +39,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/feed", feedRoutes);
-app.use("/auth", authRoutes)
 
 app.use((error, req, res, next) => {
   console.log(error);
@@ -58,11 +53,7 @@ mongoose
     `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.uv3ti.mongodb.net/messages?retryWrites=true&w=majority`
   )
   .then((res) => {
-    const server = app.listen(8080);
-    const io = require("./socket").init(server)
-    io.on("connection", socket => {
-      console.log("Client connected")
-    })
+    app.listen(8080);    
   })
   .catch((err) => {
     console.log(err);
